@@ -1,0 +1,2 @@
+# EEEPRAC3
+You have been put in charge of implementing ES Games’s latest proof of concept for a new gambling machine where users will try and guess a number. Of course, being a sensible individual, you do not condone reckless gambling and know when to draw the line. To this end, you tender your two-week resignation and start looking for a job at a gaming company that better aligns with your values, perhaps Even Mo’ Jang, Nin-eleven-do or Beth-Is-Ma. However as you still have two weeks, your bosses assign your last task to be implementing the logic and user feedback systems.
