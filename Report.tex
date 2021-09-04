@@ -1,0 +1,76 @@
+\input{Preamble/Preamble}
+\begin{document}
+\begin{sloppypar}
+
+\begin{center}
+\huge Work Package 3 - Practical\\
+\large STUDNUM1 STUDNUM2\\
+\textsc{\Large EEE3096S 2021}\\
+\rule{\linewidth}{0.2 mm} \\ 
+\end{center}
+
+The initialisations and imports are as follows:
+\begin{python}
+# Import libraries
+import RPi.GPIO as GPIO
+import random
+import ES2EEPROMUtils
+import os
+
+# some global variables that need to change as we run the program
+end_of_game = None  # set if the user wins or ends the game
+
+# DEFINE THE PINS USED HERE
+LED_value = [11, 13, 15]
+LED_accuracy = 32
+btn_submit = 16
+btn_increase = 18
+buzzer = None
+eeprom = ES2EEPROMUtils.ES2EEPROM()
+\end{python}
+
+The \verb|welcome| method is as follows:
+\begin{python}
+\end{python}
+
+
+The \verb|menu| method is as follows:
+\begin{python}
+\end{python}
+
+
+The \verb|disaply_scores| method is as follows:
+\begin{python}
+
+\end{python}
+
+
+Repeat for all functions in your code
+
+etc
+
+etc
+
+etc
+
+...
+
+
+Finally the main program when executed does the following:
+\begin{python}
+if __name__ == "__main__":
+    try:
+        # Call setup function
+        setup()
+        welcome()
+        while True:
+            menu()
+            pass
+    except Exception as e:
+        print(e)
+    finally:
+        GPIO.cleanup()
+\end{python}
+
+\end{sloppypar}
+\end{document}
