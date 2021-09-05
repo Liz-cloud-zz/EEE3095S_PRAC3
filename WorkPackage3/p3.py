@@ -5,6 +5,7 @@ import ES2EEPROMUtils
 import os
 import signal
 import sys
+import time
 
 # some global variables that need to change as we run the program
 end_of_game = None  # set if the user wins or ends the game
@@ -84,6 +85,8 @@ def setup():
 
     # Setup PWM channels
     pi_pwn=GPIO.PWM(LED_accuracy,1000)
+    # It is used to start PWM generation of specified Duty Cycle.
+    pi_pwn.start(0)
     # Setup debouncing and callbacks
     GPIO.add_event_detect(btn_increase, GPIO.FALLING,callback=btn_increase_pressed, bouncetime=100)
     signal.signal(signal.SIGINT, signal_handler)
@@ -239,7 +242,29 @@ def accuracy_leds():
     # - The % brightness should be directly proportional to the % "closeness"
     # - For example if the answer is 6 and a user guesses 4, the brightness should be at 4/6*100 = 66%
     # - If they guessed 7, the brightness would be at ((8-7)/(8-6)*100 = 50%
+        
+    # ChangeDutyCycle(Duty Cycle)
+
+    # This function is used to change the Duty Cycle of signal. We have to provide Duty Cycle in the range of 0-100.
+    # ChangeFrequency(frequency)
+
+    # This function is used to change the frequency (in Hz) of PWM. 
+    # This function we have not used in above program. But, we can use it for changing the frequency.
+   try:
+       while True:
+            for duty in range(0,101,1):
+                pi_pwn.ChangeDutyCycle(duty)
+                sleep(0.01)
+        sleep(0.5)
+
+        for duty in range(100,-1,-1):
+            pi_pwn.ChangeDutyCycle(duty)
+            sleep(0.01)
+        sleep(0.5)
+    except KeyboardInterrupt:
     pass
+    pi_pwn.stop()
+    GPIO.cleanup()
 
 # Sound Buzzer
 def trigger_buzzer():
@@ -249,7 +274,9 @@ def trigger_buzzer():
     # If the user is off by an absolute value of 3, the buzzer should sound once every second
     # If the user is off by an absolute value of 2, the buzzer should sound twice every second
     # If the user is off by an absolute value of 1, the buzzer should sound 4 times a second
+
     pass
+
 
 
 if __name__ == "__main__":
