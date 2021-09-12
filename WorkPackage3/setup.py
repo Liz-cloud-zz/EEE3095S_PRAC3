@@ -13,24 +13,26 @@ def main():
     try:
         # GPIO.setup(23, GPIO.IN)
         GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        print(GPIO.input(23))
         print(not GPIO.input(23))
         GPIO.setup([12,13,17,27,22], GPIO.OUT)
-        GPIO.add_event_detect(23, GPIO.RISING,callback=btn_increase_pressed, bouncetime=100)
+        # GPIO.add_event_detect(23, GPIO.RISING,callback=btn_increase_pressed, bouncetime=100)
+        while not GPIO.input(23) == GPIO.LOW:
+            GPIO.output([12, 13,17,27,22], GPIO.HIGH)
+        print("button was pressed! ")
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         print("Keyboard interrupt")
 
-    except:
-        print("some error") 
+    # except:
+    #     print("some error") 
 
     finally:
         print("clean up") 
         GPIO.cleanup() # cleanup all GPIO 
     
-def btn_increase_pressed():
-    while not GPIO.input(23) == GPIO.LOW:
-        GPIO.output([12, 13,17,27,22], GPIO.HIGH)
-    print("button was pressed! ")
+# def btn_increase_pressed(channel):
+#     while not GPIO.input(channel) == GPIO.LOW:
+#         GPIO.output([12, 13,17,27,22], GPIO.HIGH)
+#     print("button was pressed! ")
 if __name__ == "__main__":
     main()
 
