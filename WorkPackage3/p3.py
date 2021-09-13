@@ -59,12 +59,13 @@ def menu():
         print("Use the buttons on the Pi to make and submit your curr_guess!")
         print("Press and hold the curr_guess button to cancel your game")
         value = generate_number()
+        print("value to be gueesed=",value)
         # print("All LEDs turned on!")
         # GPIO.output(LED_value,GPIO.HIGH)
         while not end_of_game:
             # btn_increase_pressed(18)
             pass
-        welcome()
+#         welcome()
     elif option == "Q":
         print("Come back soon!")
         exit()
@@ -123,7 +124,7 @@ def setup():
         # for Buzzer
         print("set pwn for buzzer")
         GPIO.setup(buzzer,GPIO.OUT)
-        pi_pwnB=GPIO.PWM(buzzer,1000)
+        pi_pwnB=GPIO.PWM(buzzer,1)
         # start() is used to start PWM generation of specified Duty Cycle.
         pi_pwnB.start(0)
         time.sleep(0.5) # delay
@@ -345,7 +346,8 @@ def accuracy_leds():
     elif(curr_guess<value):
             duty=((8-value)/(8-curr_guess))*100
             pi_pwnL.ChangeDutyCycle(duty)
-    elif(duty==0):
+    elif(curr_guess==value):
+        duty=0
         pi_pwnL.ChangeDutyCycle(duty)
         pi_pwnL.stop()
     print("duty=",duty)
