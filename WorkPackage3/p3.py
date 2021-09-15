@@ -59,11 +59,14 @@ def menu():
         print("Use the buttons on the Pi to make and submit your curr_guess!")
         print("Press and hold the curr_guess button to cancel your game")
         value = generate_number()
+<<<<<<< HEAD
+        # print("number to be guessed",value)
+=======
         print("value to be gueesed=",value)
         # print("All LEDs turned on!")
         # GPIO.output(LED_value,GPIO.HIGH)
+>>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
         while not end_of_game:
-            # btn_increase_pressed(18)
             pass
 #         welcome()
     elif option == "Q":
@@ -104,33 +107,31 @@ def setup():
         # Setup regular GPIO:
         # Set LEDS for outputs 
         # turn off LEDS
-        print("set LEDS")
         GPIO.setup(LED_value, GPIO.OUT) 
         GPIO.output(LED_value,GPIO.LOW)
 
         # Set buttons for input
-        print("set buttons")
         GPIO.setup(btn_increase,GPIO.IN,pull_up_down=GPIO.PUD_UP)
         GPIO.setup(btn_submit,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
         # Setup PWM channels
         # for LED
-        print("set pwn for led")
         GPIO.setup(LED_accuracy,GPIO.OUT)
-        # GPIO.output(LED_accuracy,GPIO.LOW)
         pi_pwnL=GPIO.PWM(LED_accuracy,1000)
-        # start() is used to start PWM generation of specified Duty Cycle.
-        pi_pwnL.start(0)
+        pi_pwnL.start(0) # start() is used to start PWM generation of specified Duty Cycle.
         # for Buzzer
-        print("set pwn for buzzer")
         GPIO.setup(buzzer,GPIO.OUT)
+<<<<<<< HEAD
+        pi_pwnB=GPIO.PWM(buzzer,1000)
+        pi_pwnB.start(0)   # start() is used to start PWM generation of specified Duty Cycle.
+=======
         pi_pwnB=GPIO.PWM(buzzer,1)
         # start() is used to start PWM generation of specified Duty Cycle.
         pi_pwnB.start(0)
+>>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
         time.sleep(0.5) # delay
 
         # Setup debouncing and callbacks
-        print("set debouncing")
         GPIO.add_event_detect(btn_increase, GPIO.FALLING,callback=btn_increase_pressed, bouncetime=500)
         GPIO.add_event_detect(btn_submit, GPIO.FALLING,callback=btn_curr_guess_pressed, bouncetime=500)
 
@@ -151,17 +152,13 @@ def fetch_scores():
     # get however many scores there are
     score_count = None
     # Get the scores
-    score_count=eeprom.read_byte(0x00)# get score count
+    score_count=eeprom.read_byte(0x00)
     time.sleep(0.5)
     initial_scores=eeprom.read_block(1,score_count*4) # get data from eeprom
     # convert the codes back to ascii
     scores=[]
     for i in range(0,len(initial_scores),4):
         scores.append([converttoASC(initial_scores[i:i+3]),initial_scores[i+3]])
-    
-    # print("score count=",score_count)
-    # print("scores=",scores)
-
     # return back the results
     return score_count, scores
 
@@ -200,26 +197,12 @@ def generate_number():
 
 # Increase button pressed
 def btn_increase_pressed(channel):
-    # define global variable for guess
-    global curr_guess
-
-    # print("button increase pressed!")
-    # while not GPIO.input(channel) == GPIO.LOW:
-    #     GPIO.output(LED_value, GPIO.LOW)
-    print("button was pressed! ")
-    
     # You can choose to have a global variable store the user's current curr_guess, 
     # or just pull the value off the LEDs when a user makes a curr_guess
-    if(curr_guess<7):
-        curr_guess+=1# increment curr_guess number
-    else: # reset guess
-        curr_guess=0
+    # define global variable for guess
+    global curr_guess
     # Increase the value shown on the LEDs
-    if curr_guess==0:# LED1=OFF, LED2=OFF, LED3=OFF
-        GPIO.output(LED_value[0],GPIO.LOW)
-        GPIO.output(LED_value[1],GPIO.LOW)
-        GPIO.output(LED_value[2],GPIO.LOW)
-    elif curr_guess==1:# LED1=ON, LED2=OFF, LED3=OFF
+    if curr_guess==1:# LED1=ON, LED2=OFF, LED3=OFF
         GPIO.output(LED_value[0],GPIO.HIGH)
         GPIO.output(LED_value[1],GPIO.LOW)
         GPIO.output(LED_value[2],GPIO.LOW)
@@ -247,8 +230,15 @@ def btn_increase_pressed(channel):
         GPIO.output(LED_value[0],GPIO.HIGH)
         GPIO.output(LED_value[1],GPIO.HIGH)
         GPIO.output(LED_value[2],GPIO.HIGH)
-    
-    print("guess value =",curr_guess)
+    else:
+        GPIO.output(LED_value[0],GPIO.LOW)
+        GPIO.output(LED_value[1],GPIO.LOW)
+        GPIO.output(LED_value[2],GPIO.LOW)
+    # print("guess value =",curr_guess)
+    if(curr_guess==7):# reset guess
+        curr_guess=0
+    else: 
+        curr_guess+=1# increment curr_guess number
     pass
 
 
@@ -265,12 +255,12 @@ def btn_curr_guess_pressed(channel):
     # If they've pressed and held the button,
     while GPIO.input(channel)==0:
         pass
+
     button_time=time.time()-start # get the difference when button is pressed and realsed
-    print("Button submit pressed!")
 
     if ( .1 <=button_time < 2): # if less than 2 seconds , increment number of guess trials
         trials+=1
-        print("number of trials is : ",trials)
+        # print("number of trials is : ",trials)
         # adjust the current guess value
         if curr_guess==0:
             curr_guess=7
@@ -279,16 +269,15 @@ def btn_curr_guess_pressed(channel):
 
         # Compare the actual value with the user value displayed on the LEDs
         if (value==curr_guess):  # if it's an exact curr_guess:
-            print("correct guess! ")
-
+            print("correct guess value! ")
+         
             # - Disable LEDs and Buzzer
             GPIO.output(LED_value,GPIO.LOW)
             accuracy_leds()
             trigger_buzzer()
-
+            
             # - tell the user and prompt them for aascii_val
-            username=input()
-            print("Enter yourascii_val: "+username)
+            username=input("Enter your name: ")
 
             # - fetch all the scores
             # - add the new score
@@ -304,13 +293,18 @@ def btn_curr_guess_pressed(channel):
             menu()
             pass
         else:
-            print("all leds lit up")
+            # print("all guess leds lit up")
             GPIO.output(LED_value,GPIO.HIGH)
             # Change the PWM LED
             accuracy_leds()
             # if it's close enough, adjust the buzzer
             trigger_buzzer()
             curr_guess=0# reset guesses
+
+             # clear up the GPIO and take them back to the menu screen
+            GPIO.cleanup()
+            time.sleep(0.5)
+            menu()
 
     elif (2 <= button_time):
         end_of_game=False
@@ -336,21 +330,29 @@ def accuracy_leds():
     # - If they curr_guessed 7, the brightness would be at ((8-7)/(8-6)*100 = 50%
 #    try:
     duty=0
-    print("LED2 lit up")
     if(curr_guess>value):
         duty=((8-curr_guess)/(8-value))*100
         pi_pwnL.ChangeDutyCycle(duty)
+        if(duty==0):
+                 pi_pwnL.stop()
     elif(value==0 and curr_guess!= value):
         duty=(curr_guess/8)*100
         pi_pwnL.ChangeDutyCycle(duty)
+        if(duty==0):
+                 pi_pwnL.stop()
     elif(curr_guess<value):
             duty=((8-value)/(8-curr_guess))*100
             pi_pwnL.ChangeDutyCycle(duty)
+<<<<<<< HEAD
+            if(duty==0):
+                 pi_pwnL.stop()
+=======
     elif(curr_guess==value):
         duty=0
         pi_pwnL.ChangeDutyCycle(duty)
         pi_pwnL.stop()
     print("duty=",duty)
+>>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
 #    except KeyboardInterrupt:
 #        print("interrupt occured!")
     pass
@@ -366,7 +368,9 @@ def trigger_buzzer():
     # The buzzer duty cycle should be left at 50%
    
     diff=abs(value-curr_guess)
-    print("difference is=",diff)
+    # print("current guess",curr_guess)
+    # print("guess val",value)
+    # print("difference is=",diff)
     # try:
     if(diff==3):  # If the user is off by an absolute value of 3, the buzzer should sound once every second
         pi_pwnB.ChangeFrequency(1)
@@ -387,10 +391,10 @@ def trigger_buzzer():
 
 if __name__ == "__main__":
     try:
-        # Call setup function
-        # setup()
+        # Call welcome function
         welcome()
         while True:
+            # Call menu function
             menu()
             pass
     except Exception as e:
