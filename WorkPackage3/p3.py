@@ -59,16 +59,10 @@ def menu():
         print("Use the buttons on the Pi to make and submit your curr_guess!")
         print("Press and hold the curr_guess button to cancel your game")
         value = generate_number()
-<<<<<<< HEAD
-        # print("number to be guessed",value)
-=======
-        print("value to be gueesed=",value)
-        # print("All LEDs turned on!")
-        # GPIO.output(LED_value,GPIO.HIGH)
->>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
+        # print("value to be gueesed=",value)
         while not end_of_game:
             pass
-#         welcome()
+        welcome()
     elif option == "Q":
         print("Come back soon!")
         exit()
@@ -101,7 +95,6 @@ def setup():
 
     # Setup board mode
     GPIO.setmode(GPIO.BOARD)
-    print("setmode is Board")
 
     try:
         # Setup regular GPIO:
@@ -111,24 +104,23 @@ def setup():
         GPIO.output(LED_value,GPIO.LOW)
 
         # Set buttons for input
+     
         GPIO.setup(btn_increase,GPIO.IN,pull_up_down=GPIO.PUD_UP)
         GPIO.setup(btn_submit,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
         # Setup PWM channels
         # for LED
+        # print("set led2 pwn")
         GPIO.setup(LED_accuracy,GPIO.OUT)
         pi_pwnL=GPIO.PWM(LED_accuracy,1000)
         pi_pwnL.start(0) # start() is used to start PWM generation of specified Duty Cycle.
         # for Buzzer
         GPIO.setup(buzzer,GPIO.OUT)
-<<<<<<< HEAD
         pi_pwnB=GPIO.PWM(buzzer,1000)
         pi_pwnB.start(0)   # start() is used to start PWM generation of specified Duty Cycle.
-=======
-        pi_pwnB=GPIO.PWM(buzzer,1)
+       
         # start() is used to start PWM generation of specified Duty Cycle.
         pi_pwnB.start(0)
->>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
         time.sleep(0.5) # delay
 
         # Setup debouncing and callbacks
@@ -201,6 +193,7 @@ def btn_increase_pressed(channel):
     # or just pull the value off the LEDs when a user makes a curr_guess
     # define global variable for guess
     global curr_guess
+    # print("guess pressed!")
     # Increase the value shown on the LEDs
     if curr_guess==1:# LED1=ON, LED2=OFF, LED3=OFF
         GPIO.output(LED_value[0],GPIO.HIGH)
@@ -250,7 +243,7 @@ def btn_curr_guess_pressed(channel):
     global value
     global username
     global eeprom
-
+    # print("guess submitted!")
     start=time.time()# get start time when button is pressed
     # If they've pressed and held the button,
     while GPIO.input(channel)==0:
@@ -301,7 +294,7 @@ def btn_curr_guess_pressed(channel):
             trigger_buzzer()
             curr_guess=0# reset guesses
 
-             # clear up the GPIO and take them back to the menu screen
+            # clear up the GPIO and take them back to the menu screen
             GPIO.cleanup()
             time.sleep(0.5)
             menu()
@@ -343,16 +336,15 @@ def accuracy_leds():
     elif(curr_guess<value):
             duty=((8-value)/(8-curr_guess))*100
             pi_pwnL.ChangeDutyCycle(duty)
-<<<<<<< HEAD
             if(duty==0):
                  pi_pwnL.stop()
-=======
+
     elif(curr_guess==value):
         duty=0
         pi_pwnL.ChangeDutyCycle(duty)
         pi_pwnL.stop()
-    print("duty=",duty)
->>>>>>> 3311ceda3b8c8583c96d296961921ed03e3f734d
+ 
+
 #    except KeyboardInterrupt:
 #        print("interrupt occured!")
     pass
