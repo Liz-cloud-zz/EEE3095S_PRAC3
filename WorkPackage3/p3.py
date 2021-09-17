@@ -118,9 +118,6 @@ def setup():
         GPIO.setup(buzzer,GPIO.OUT)
         pi_pwnB=GPIO.PWM(buzzer,1000)
         pi_pwnB.start(0)   # start() is used to start PWM generation of specified Duty Cycle.
-       
-        # start() is used to start PWM generation of specified Duty Cycle.
-        pi_pwnB.start(0)
         time.sleep(0.5) # delay
 
         # Setup debouncing and callbacks
